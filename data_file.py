@@ -6,6 +6,8 @@ import CorrectionPlotter
 
 class DataFile:
     column_sep = ","
+    columns = ["#filename", "distance", "laser_voltage", "drift_voltage", "time_resolution_of_measurement", "peak_time",
+         "area", "t_FWHM"]
 
     def __init__(self, filename, distance, laser_voltage):
         self.filename = filename
@@ -17,7 +19,7 @@ class DataFile:
         self.correct_minority_voltage()  # removes the slope from the minority voltage
         self.peak_time = self.find_peak()  # finds the time of the peak of the minority voltage
         self.area = self.get_area()  # find the area of the corrected minority voltage graph
-        self.delta_t = self.get_delta_t()  # find the FWHM of the peak
+        self.t_fwhm = self.get_delta_t()  # find the FWHM of the peak
 
         # save corrected data
         self.write_to_file()
@@ -25,11 +27,10 @@ class DataFile:
     def write_to_file(self):
         """write all the data to a file for plotting etc."""
         # construct header
-        header = self.column_sep.join(
-            ["#filename", "distance", "laser_voltage", "drift_voltage", "time_step", "peak_time", "area", "delta_t\n"])
+        header = self.column_sep.join(self.columns) + "\n"
         header += "#" + self.summary() + "\n"
         header += "#" + self.column_sep.join(
-            ["corrected_minority_voltage", "drift_voltage", "minority_voltage", "time", "trigger_signal\n"])
+            ["corrected_minority_voltage", "drift_voltage", "minority_voltage", "time", "trigger_signal"]) + "\n"
         out = ""
 
         # construct data to string
@@ -54,7 +55,7 @@ class DataFile:
         re += str(self.time_step) + self.column_sep
         re += str(self.peak_time) + self.column_sep
         re += str(self.area) + self.column_sep
-        re += str(self.delta_t)
+        re += str(self.t_fwhm)
         return re
 
     def get_delta_t(self):
@@ -150,3 +151,4 @@ class DataFile:
             drift_volt.append(float(line[2]))
             minor_volt.append(float(line[3]))
         return {"time": time, "trigger": trigger, "drift_volt": drift_volt, "minor_volt": minor_volt}
+

@@ -5,7 +5,7 @@ for file in os.listdir("data"):
     with open("data/" + file, "r") as f:
         lines = f.readlines()
     if len(lines) < 1:
-        print("fail: "+ file)
+        print("fail: " + file)
         continue
     lines[0] = "#" + lines[0]
     lines[1] = "#" + lines[1]
@@ -13,4 +13,3 @@ for file in os.listdir("data"):
     with open("data/" + file, "w") as f:
         for line in lines:
             f.write(line)
-

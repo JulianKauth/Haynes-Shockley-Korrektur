@@ -54,13 +54,11 @@ data = [[
 ]]
 
 for i, experiment in enumerate(data):
-    out = DataFile.column_sep.join(
-        ["#filename", "distance", "laser_voltage", "drift_voltage", "time_step", "peak_time", "area", "delta_t\n"])
-    for d in experiment:
-        out += d.summary() + "\n"
+    out = DataFile.column_sep.join(DataFile.columns) + "\n"
+    for measurement in experiment:
+        out += measurement.summary() + "\n"
     with open("summary" + str(i), "w+") as f:
         f.write(out)
 
 CorrectionPlotter.save("plot.png")
 print("Done in {0:.2f} seconds".format(time() - start))
-
